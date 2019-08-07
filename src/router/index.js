@@ -49,14 +49,15 @@ export const constantRoutes = [
     redirect: '/dashboard',
     children: [{
       path: 'dashboard',
-      name: 'Dashboard',
+      name: '首页',
       component: () => import('@/views/dashboard/index'),
-      meta: { title: 'Dashboard', icon: 'dashboard' }
+      meta: { title: '首页', icon: 'dashboard' }
     }]
   },
 
   {
     path: '/example',
+    hidden: true,
     component: Layout,
     redirect: '/example/table',
     name: 'Example',
@@ -79,6 +80,7 @@ export const constantRoutes = [
 
   {
     path: '/form',
+    hidden: true,
     component: Layout,
     children: [
       {
@@ -92,6 +94,7 @@ export const constantRoutes = [
 
   {
     path: '/nested',
+    hidden: true,
     component: Layout,
     redirect: '/nested/menu1',
     name: 'Nested',
@@ -150,11 +153,34 @@ export const constantRoutes = [
 
   {
     path: 'external-link',
+    hidden: true,
     component: Layout,
     children: [
       {
         path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
         meta: { title: 'External Link', icon: 'link' }
+      }
+    ]
+  },
+
+  {
+    path: '/current',
+    component: Layout,
+    redirect: '/current/table',
+    name: '自定义',
+    meta: { title: '自定义', icon: 'dashboard' },
+    children: [
+      {
+        path: 'table',
+        name: '表格',
+        component: () => import('@/views/table/index'),
+        meta: { title: '表格', icon: 'table' }
+      },
+      {
+        path: 'form',
+        name: '表单',
+        component: () => import('@/views/form/index'),
+        meta: { title: '表单', icon: 'form' }
       }
     ]
   },

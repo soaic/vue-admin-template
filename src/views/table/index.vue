@@ -10,17 +10,17 @@
     >
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
-          {{ scope.$index }}
+          {{ scope.row.id }}
         </template>
       </el-table-column>
-      <el-table-column label="Title">
+      <el-table-column label="userName">
         <template slot-scope="scope">
-          {{ scope.row.title }}
+          {{ scope.row.userName }}
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
+      <el-table-column label="password" width="110" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          <span>{{ scope.row.password }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Pageviews" width="110" align="center">
@@ -40,13 +40,18 @@
         </template>
       </el-table-column>
     </el-table>
+    <div style="margin-left:100px;">
+      <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="fetchData" />
+    </div>
   </div>
 </template>
 
 <script>
-import { getList } from '@/api/table'
+import { getAllUser } from '@/api/user'
+import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
+  components: { Pagination },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -60,7 +65,16 @@ export default {
   data() {
     return {
       list: null,
-      listLoading: true
+      listLoading: true,
+      total: 0,
+      listQuery: {
+        page: 1,
+        limit: 10,
+        importance: undefined,
+        title: undefined,
+        type: undefined,
+        sort: '+id'
+      }
     }
   },
   created() {
@@ -69,8 +83,9 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getList().then(response => {
+      getAllUser(this.listQuery.page, this.listQuery.limit).then(response => {
         this.list = response.data.items
+        this.total = response.data.total
         this.listLoading = false
       })
     }

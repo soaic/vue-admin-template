@@ -4,7 +4,7 @@ export function login(data) {
   return request({
     url: '/user/login',
     method: 'post',
-    data
+    params: data
   })
 }
 
@@ -13,6 +13,14 @@ export function getInfo(token) {
     url: '/user/info',
     method: 'get',
     params: { token }
+  })
+}
+
+export function getAllUser(pageNum, pageSize) {
+  return request({
+    url: '/user/findAllUser',
+    method: 'get',
+    params: { pageNum: pageNum, pageSize: pageSize }
   })
 }
 
