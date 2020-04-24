@@ -1,12 +1,26 @@
 <template>
   <div class="app-container">
+    <div class="filter-container">
+      <span style="font-size: 14px;margin-left: 10px; margin-right: 10px;">ID</span>
+      <el-input v-model="listQuery.id" placeholder="" style="width: 100px;" class="filter-item" />
+      <span style="font-size: 14px;margin-left: 10px; margin-right: 10px;">用户名</span>
+      <el-input v-model="listQuery.userName" placeholder="" style="width: 100px;" class="filter-item"/>
+      <span style="font-size: 14px;margin-left: 10px; margin-right: 10px;">密码</span>
+      <el-input v-model="listQuery.password" placeholder="" style="width: 100px;" class="filter-item" />
+      <el-select v-model="listQuery.type" placeholder="" clearable style="width: 90px" class="filter-item">
+        <el-option v-for="item in types" :key="item" :label="item" :value="item" />
+      </el-select>
+      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
+        搜索
+      </el-button>
+    </div>
     <el-table
       v-loading="listLoading"
       :data="list"
       element-loading-text="Loading"
       border
       fit
-      highlight-current-row
+      stripe
     >
       <el-table-column align="center" label="ID" width="95">
         <template slot-scope="scope">
@@ -40,14 +54,16 @@
         </template>
       </el-table-column>
     </el-table>
-    <div style="margin-left:100px;">
-      <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="fetchData" />
+    <div class="bottom-pagination">
+      <div style="position: absolute; right: 0; ">
+        <pagination v-show="total>0" :total="total" :page.sync="listQuery.pageNum" :limit.sync="listQuery.pageSize" @pagination="fetchData" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { getAllUser } from '@/api/user'
+import { findUsers } from '@/api/user'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 export default {
@@ -68,13 +84,14 @@ export default {
       listLoading: true,
       total: 0,
       listQuery: {
-        page: 1,
-        limit: 10,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
-        sort: '+id'
-      }
+        pageNum: 1,
+        pageSize: 10,
+        id: null,
+        userName: null,
+        password: null,
+        type: null
+      },
+      types: ['用户', '管理员']
     }
   },
   created() {
@@ -83,11 +100,17 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      getAllUser(this.listQuery.page, this.listQuery.limit).then(response => {
+      findUsers(this.listQuery).then(response => {
         this.list = response.data.items
         this.total = response.data.total
-        this.listLoading = false
+        setTimeout(() => {
+          this.listLoading = false
+        }, 0.5 * 1000)
       })
+    },
+    handleFilter() {
+      this.listQuery.pageNum = 1
+      this.fetchData()
     }
   }
 }

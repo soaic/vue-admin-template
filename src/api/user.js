@@ -16,11 +16,12 @@ export function getInfo(token) {
   })
 }
 
-export function getAllUser(pageNum, pageSize) {
+export function findUsers(query) {
+  console.log(query)
   return request({
-    url: '/user/findAllUser',
+    url: '/user/findUsers',
     method: 'get',
-    params: { pageNum: pageNum, pageSize: pageSize }
+    params: query
   })
 }
 
