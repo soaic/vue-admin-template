@@ -1,15 +1,24 @@
 <template>
   <div class="chart-container">
-    <chart height="100%" width="100%" />
+    <chart height="100%" width="100%" :chart-data="lineChartData" />
   </div>
 </template>
 
 <script>
-import Chart from '@/components/Charts/LineChart'
+import Chart from '@/components/Charts/Bar2Chart'
+
+const lineChartData1 = {
+  weekData: [10, 52, 200, 134, 290, 200, 220]
+}
 
 export default {
-  name: 'LineChart',
-  components: { Chart }
+  name: 'BarChart',
+  components: { Chart },
+  data() {
+    return {
+      lineChartData: lineChartData1
+    }
+  }
 }
 </script>
 
